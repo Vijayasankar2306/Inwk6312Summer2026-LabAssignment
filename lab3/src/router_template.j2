@@ -1,0 +1,12 @@
+{% for router in routers %}
+
+hostname {{ router.hostname }}
+
+{% for interface in router.interfaces %}
+interface {{ interface.name }}
+ ip address {{ interface.ip }} {{ interface.mask }}
+ no shutdown
+!
+{% endfor %}
+
+{% endfor %}
