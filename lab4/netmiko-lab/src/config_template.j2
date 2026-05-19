@@ -1,0 +1,33 @@
+no ip domain lookup
+
+line con 0
+ logging synchronous
+ exit
+
+interface loopback0
+ ip address {{ loopback_ip }} 255.255.255.255
+ no shutdown
+
+interface GigabitEthernet1
+ no shutdown
+
+{% for intf in subinterfaces %}
+interface GigabitEthernet1.{{ intf.vlan }}
+ encapsulation dot1Q {{ intf.vlan }}
+ ip address {{ intf.ip }} 255.255.255.0
+ no shutdown
+{% endfor %}
+
+router rip
+ version 2
+{% for net in rip_networks %}
+ network {{ net }}
+{% endfor %}
+ no auto-summary
+ exit
+
+line vty 0 4
+ password inwk
+ login
+ transport input all
+ exit
